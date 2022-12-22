@@ -20,13 +20,25 @@ w_t = WritingTurtle()
 DATA = pandas.read_csv("50_states.csv")
 STATE_LIST = DATA["state"].to_list()
 GAME_ON = True
+guessed_states = []
 
 while GAME_ON:
+
+    # could use while number_correct < 50:
+
     answer_state = \
         screen.textinput(title=f"{number_correct}/50 correct", prompt="What's another state's name?").title()
 
+    # Can use if answer_state in STATE_LIST:
+    if answer_state == "Exit":
+        missing_states = [state for state in STATE_LIST if state not in guessed_states]
+        new_data = pandas.DataFrame(missing_states)
+        new_data.to_csv("states_to_learn.csv")
+        break
+
     for i in range(len(STATE_LIST)):
         if STATE_LIST[i] == answer_state:
+            guessed_states.append(answer_state)
             state = DATA[DATA["state"] == answer_state]
             x_coord = float(state.x.values)
             y_coord = float(state.y.values)
@@ -39,6 +51,14 @@ while GAME_ON:
     if number_correct == 50:
         GAME_ON = False
 
+# states to learn.csv:
+# learner_states = ['states to learn']
+# for state in STATE_LIST:
+#     if state not in guessed_states:
+#         learner_states.append(state)
+# learn_frame = pandas.DataFrame(learner_states)
+# learn_frame.to_csv("states to learn.csv")
+
 # print(answer_state)
 
 # This code would be used to build the csv database
@@ -50,4 +70,4 @@ while GAME_ON:
 
 
 # mainloop is an alternative to the screen.exitonclick()
-turtle.mainloop()
+# turtle.mainloop()
